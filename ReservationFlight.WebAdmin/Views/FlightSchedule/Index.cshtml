@@ -1,0 +1,147 @@
+﻿@using ReservationFlight.Model.Common;
+@using ReservationFlight.Model.Systems.Utilities.Enums
+@using ReservationFlight.Utility
+@model PagedResult<ReservationFlight.Model.Catalog.Flights.FlightScheduleViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Danh sách chuyến bay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script src="/js/site.js"></script>
+    <script>
+        var flightScheduleController = new FlightScheduleController();
+        flightScheduleController.initialize();
+    </script>
+}
+<div class="container-fluid">
+    <h1 class="mt-4">Danh sách chuyến bay</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách chuyến bay</li>
+    </ol>
+    <div class="card mb-12">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-7 col-xs-12">
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/FlightSchedule/Create'">Tạo mới</button>
+                </div>
+                <div class="col-md-5 col-xs-12">
+                    <form asp-action="Index" method="get">
+                        <div class="row">
+                            <div class="col-md-9">
+                                @*name: là tên tham số*@
+                                <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <button type="submit" class="btn btn-info mr-1"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    <button type="button" onclick="window.location.href='/FlightSchedule/Index'" class="btn btn-secondary">Đặt lại</button>
+                                </div>                            
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th width="10%">
+                                @Html.DisplayNameFor(model => model.Items.First().FlightRouteId)
+                            </th>
+                            <th width="13%">
+                                @Html.DisplayNameFor(model => model.Items.First().AviationId)
+                            </th>
+                            <th width="10%">
+                                @Html.DisplayNameFor(model => model.Items.First().Price)
+                            </th>
+                            <th width="10%">
+                                @Html.DisplayNameFor(model => model.Items.First().Date)
+                            </th>
+                            <th width="8%">
+                                @Html.DisplayNameFor(model => model.Items.First().ScheduledTimeDeparture)
+                            </th>
+                            <th width="9%">
+                                @Html.DisplayNameFor(model => model.Items.First().ScheduledTimeArrival)
+                            </th>
+                            <th width="13%">
+                                @Html.DisplayNameFor(model => model.Items.First().Status)
+                            </th>
+                            <th class="text-center" width="18%">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @item.FlightRouteId
+                                </td>
+                                <td>
+                                    @item.AviationId
+                                </td>
+                                <td>
+                                    @Html.Raw(FunctionCommon.FormatMoney(item.Price))
+                                </td>
+                                <td>
+                                    @FunctionCommon.FormatDate(item.Date)
+                                </td>
+                                <td>
+                                    @FunctionCommon.FormatTimeSpan(item.ScheduledTimeDeparture)
+                                </td>
+                                <td>
+                                    @FunctionCommon.FormatTimeSpan(item.ScheduledTimeArrival)
+                                </td>
+                                <td>
+                                    @{
+                                        var statusName = "";
+                                        switch (item.Status)
+                                        {
+                                            case ((int)Status.Active):
+                                                statusName = "Đang hoạt động";
+                                                break;
+
+                                            case ((int)Status.InActive):
+                                                statusName = "Không hoạt động";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    @statusName
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-flightschedule" data-url="@Url.Action("Details", "FlightSchedule", new { Id = item.Id })">Xem chi tiết</button>
+                                    <button class="btn btn-success btn-flightschedule" data-url="@Url.Action("Edit", "FlightSchedule", new { Id = item.Id })">Cập nhật</button>
+                                    @switch (item.Status)
+                                    {
+                                        case ((int)Status.Active):
+                                            <button class="btn btn-success btn-flightschedule-status" data-id="@item.Id">Hủy kích hoạt</button>
+                                            break;
+
+                                        case ((int)Status.InActive):
+                                            <button class="btn btn-success btn-flightschedule-status" data-id="@item.Id">Kích hoạt</button>
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    <button class="btn btn-danger btn-flightschedule" data-url="@Url.Action("Delete", "FlightSchedule", new { Id = item.Id })">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*truyền Model PagedResult vào vì hàm InvokeAsync của class PagerViewComponent nhận 1
+            tham số object PagedResult*@
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+    </div>
+</div>

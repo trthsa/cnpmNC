@@ -1,0 +1,273 @@
+﻿@model List<ReservationFlight.Model.Catalog.Flights.FlightViewModel>
+@using ReservationFlight.Model.Catalog.Flights;
+@using ReservationFlight.Model.Common;
+@using Microsoft.AspNetCore.Http;
+@using ReservationFlight.Utility;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/assets/css/stylesearchpage.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container col-12 mt-2 mb-5">
+        <h4>Chọn chuyến bay @Model.First().DepartureId - @Model.First().ArrivalId</h4>
+        @{
+            var detailOneWay = Context.Session.GetObject<FlightScheduleViewModel>("DetailOneWay");
+            var classValueRow = (detailOneWay != null) ? "row" : string.Empty;
+            var classValueCol = (detailOneWay != null) ? "col-7" : string.Empty;
+        }
+
+        <div class="card border-0">
+            <div class="card-body">
+                <p style="color:#cc0000; font-weight: 500;">Lưu ý: Giá dưới đây đã bao gồm thuế, phí</p>
+                <p style="color: #0254ec;">+ Phí Dịch Vụ Đặc Biệt</p>
+                <p style="color: #0254ec;">+ Thuế, Phí, Lệ phí & Phụ thu</p>
+                <b>Đồng tiền thanh toán là "VND", Quý khách kiểm tra kỹ đồng tiền trước khi thanh toán.</b>
+            </div>
+        </div>
+        <div class="@classValueRow">
+            <div class="@classValueCol">
+                @if (detailOneWay != null)
+                {
+                    <br />
+                    <div class="d-flex row">
+                        <div class="col-12">
+                            <strong style="font-size: 20px; color: #cc0000;">Chuyến đi @detailOneWay.Date.ToString("ddd, MMM dd") bạn đã chọn</strong>
+                            <div class="card border-0 mt-2">
+                                <div class="card-body bg-top d-flex p-3" style="border: 2px solid #cc0000;">
+                                    <div class="p-4 d-flex flex-column">
+                                        <div class="d-flex flex-row justify-content-between">
+                                            <div class="d-flex flex-column justify-content-between align-items-center">
+                                                @{
+                                                    /* chỗ này phải gán là ArrivalId bởi vì sau khi search vé OneWay xong thì DepartureId => ArrivalId và ngược lại để search vé chiều về */
+                                                }
+                                                <h2>@FunctionCommon.FormatTimeSpan(detailOneWay.ScheduledTimeDeparture)</h2><span class="mb-2" style="font-size: 25px;">@detailOneWay.DepartureId</span>
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center p-4"><i class="fa fa-plane fa-3x"></i></div>
+                                            <div class="d-flex flex-column justify-content-between align-items-center">
+                                                @{
+                                                    /* chỗ này phải gán là DepartureId bởi vì sau khi search vé OneWay xong thì ArrivalId => DepartureId và ngược lại để search vé chiều về */
+                                                }
+                                                <h2>@FunctionCommon.FormatTimeSpan(detailOneWay.ScheduledTimeArrival)</h2><span class="mb-2" style="font-size: 25px;">@detailOneWay.ArrivalId</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <span class="p-2">
+                                                @detailOneWay.ScheduledTimeArrival.Subtract(detailOneWay.ScheduledTimeDeparture).Hours.ToString()
+                                                tiếng
+                                                @detailOneWay.ScheduledTimeArrival.Subtract(detailOneWay.ScheduledTimeDeparture).Minutes.ToString()
+                                                phút
+                                            </span>
+                                            <span class="p-2"><b>Bay thẳng</b></span>
+                                        </div>
+                                        <div class="d-flex flex-row pt-4">
+                                            <a role="button" class="btn btn-primary" data-toggle="collapse"
+                                           href="#@detailOneWay.Id" aria-expanded="false" aria-controls="@detailOneWay.Id">Xem chi tiết</a>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 bg-top d-flex flex-row mr-auto">
+                                        <span class="p-2">@detailOneWay.FlightNumber - Airbus A321</span>
+                                    </div>
+                                    <div class="">
+                                        <div class="p-4 m-5 small-card">
+                                            <div class="justify-content-between">
+                                                <div class="d-flex flex-column">
+                                                    <a href="javascript:history.go(-1)"><h4>Thay đổi</h4></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="collapse" id="@detailOneWay.Id">
+                                <div class="card border-0 mt-2">
+                                    <div class="card-body bg-top p-3" style="border: 2px solid #cc0000;">
+                                        <div style="font-size: 18px; font-weight: 500;">
+                                            @FunctionCommon.FormatLongDate(detailOneWay.Date),
+                                            @FunctionCommon.FormatTimeSpan(detailOneWay.ScheduledTimeDeparture)
+                                            @detailOneWay.DepartureId
+                                        </div>
+                                        <div><span style="font-weight: 600;">@detailOneWay.FlightNumber</span> Hãng khai thác @detailOneWay.AviationId</div>
+                                        <div><span style="font-weight: 600;">Máy bay:</span> Airbus A321</div>
+                                        <div>
+                                            <span style="font-weight: 600;">Thời gian di chuyển:</span>
+                                            @detailOneWay.ScheduledTimeArrival.Subtract(detailOneWay.ScheduledTimeDeparture).Hours.ToString()
+                                            tiếng
+                                            @detailOneWay.ScheduledTimeArrival.Subtract(detailOneWay.ScheduledTimeDeparture).Minutes.ToString()
+                                            phút
+                                        </div>
+                                        <div style="font-size: 18px; font-weight: 500;">
+                                            @FunctionCommon.FormatLongDate(detailOneWay.Date),
+                                            @FunctionCommon.FormatTimeSpan(detailOneWay.ScheduledTimeArrival)
+                                            @{
+                                                /* chỗ này phải gán là DepartureId bởi vì sau khi search vé OneWay xong thì ArrivalId => DepartureId và ngược lại để search vé chiều về */
+                                            }
+                                            @detailOneWay.ArrivalId
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <img href="#" />
+                        </div>
+                    </div>
+                }
+                <br />
+                <div class="d-flex row">
+                    <div class="col-12">
+                        @foreach (var item in Model)
+                        {
+                            <div class="card border-0 mt-2">
+                                <div class="card-body bg-top d-flex p-3">
+                                    <div class="p-4 d-flex flex-column">
+                                        <div class="d-flex flex-row justify-content-between">
+                                            <div class="d-flex flex-column justify-content-between align-items-center">
+                                                <h2>@FunctionCommon.FormatTimeSpan(@item.ScheduledTimeDeparture)</h2><span class="mb-2" style="font-size: 25px;">@item.DepartureId</span>
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center p-4"><i class="fa fa-plane fa-3x"></i></div>
+                                            <div class="d-flex flex-column justify-content-between align-items-center">
+                                                <h2>@FunctionCommon.FormatTimeSpan(@item.ScheduledTimeArrival)</h2><span class="mb-2" style="font-size: 25px;">@item.ArrivalId</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <span class="p-2">
+                                                @item.ScheduledTimeArrival.Subtract(item.ScheduledTimeDeparture).Hours.ToString()
+                                                tiếng
+                                                @item.ScheduledTimeArrival.Subtract(item.ScheduledTimeDeparture).Minutes.ToString()
+                                                phút
+                                            </span>
+                                            <span class="p-2"><b>Bay thẳng</b></span>
+                                        </div>
+                                        <div class="d-flex flex-row pt-4">
+                                            <a role="button" class="btn btn-primary" data-toggle="collapse"
+                                           href="#@item.Id" aria-expanded="false" aria-controls="@item.Id">Xem chi tiết</a>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 bg-top d-flex flex-row mr-auto">
+                                        <span class="p-2">@item.FlightNumber - Airbus A321</span>
+                                    </div>
+                                    <div class="bg-top d-flex flex-row mt-2">
+                                        <div class="p-4 m-5 d-flex flex-row small-card">
+                                            <div class="d-flex flex-row justify-content-between">
+                                                <div class="d-flex flex-column mt-4">
+                                                    @{
+                                                        var journeyType = 0;
+                                                        var checkTypeInt = int.TryParse(Context.Session.GetString("JourneyType"), out journeyType);                     
+                                                        if (checkTypeInt)
+                                                        {
+                                                            if (journeyType == Constants.JOURNEY_TYPE_ONE_WAY)
+                                                            {
+                                                                <a href="@Url.Action("InputInformation", "Home", new { item.Id })"><h4>@Html.Raw(FunctionCommon.FormatMoney(item.Price))</h4></a>
+                                                            }
+                                                            else if (journeyType == Constants.JOURNEY_TYPE_ROUND_TRIP)
+                                                            {
+                                                                <a href="@Url.Action("SelectedOneWayFlightSchedule", "Home", new { item.Id })"><h4>@Html.Raw(FunctionCommon.FormatMoney(item.Price))</h4></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {                                          
+                                                            <a href="@Url.Action("InputInformation", "Home", new { item.Id })"><h4>@Html.Raw(FunctionCommon.FormatMoney(item.Price))</h4></a>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="collapse" id="@item.Id">
+                                <div class="card border-0 mt-2">
+                                    <div class="card-body bg-top p-3">
+                                        <div style="font-size: 18px; font-weight: 500;">
+                                            @FunctionCommon.FormatLongDate(item.Date),
+                                            @FunctionCommon.FormatTimeSpan(@item.ScheduledTimeDeparture)
+                                            @item.DepartureId
+                                        </div>
+                                        <div><span style="font-weight: 600;">@item.FlightNumber</span> Hãng khai thác @item.AviationId</div>
+                                        <div><span style="font-weight: 600;">Máy bay:</span> Airbus A321</div>
+                                        <div>
+                                            <span style="font-weight: 600;">Thời gian di chuyển:</span>
+                                            @item.ScheduledTimeArrival.Subtract(item.ScheduledTimeDeparture).Hours.ToString()
+                                            tiếng
+                                            @item.ScheduledTimeArrival.Subtract(item.ScheduledTimeDeparture).Minutes.ToString()
+                                            phút
+                                        </div>
+                                        <div style="font-size: 18px; font-weight: 500;">
+                                            @FunctionCommon.FormatLongDate(item.Date),
+                                            @FunctionCommon.FormatTimeSpan(@item.ScheduledTimeArrival)
+                                            @item.ArrivalId
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <img href="#" />
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (detailOneWay != null)
+            {
+                <div class="col-5 pt-4 mt-3">
+                    <div class="d-flex row">
+                        <div class="col-12">
+                            <div class="card card-body">
+                                <h4>Chi tiết chuyến bay</h4>
+                                <div class="card card-header mb-2">
+                                    <div class="row d-flex flex-row">
+                                        <div class="col-9 mr-auto">
+                                            @Model.First().ArrivalId-@Model.First().DepartureId
+                                        </div>
+                                        <div class="col-3">
+                                            @Html.Raw(FunctionCommon.FormatMoney(detailOneWay.Price-900000))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-header mb-2">
+                                    <div class="d-flex ">Dịch vụ bổ trợ</div>
+                                </div>
+                                <div class="card card-header">
+                                    <div class="row d-flex flex-row">
+                                        <div class="col-9 mr-auto">
+                                            Thuế phí và các khoản thu
+                                        </div>
+                                        <div class="col-3">
+                                            @Html.Raw(FunctionCommon.FormatMoney(Convert.ToDecimal(900000)))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-header">
+                                    <div class="row d-flex flex-row ">
+                                        <div class="col-9 mr-auto">
+                                            Tổng số tiền
+                                        </div>
+                                        <div class="col-3">
+                                            @Html.Raw(FunctionCommon.FormatMoney(detailOneWay.Price))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container">
+        <div class="spinner"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+</html>

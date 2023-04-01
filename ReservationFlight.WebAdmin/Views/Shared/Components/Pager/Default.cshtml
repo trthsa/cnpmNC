@@ -1,0 +1,69 @@
+﻿@model ReservationFlight.Model.Common.PagedResultBase
+@{
+    var urlTemplate = Url.Action() + "?pageIndex={0}";
+    var request = ViewContext.HttpContext.Request;
+    foreach (var key in request.Query.Keys)
+    {
+        if (key == "pageIndex")
+        {
+            continue;
+        }
+        if (request.Query[key].Count > 1)
+        {
+            foreach (var item in (string[])request.Query[key])
+            {
+                urlTemplate += "&" + key + "=" + item;
+            }
+        }
+        else
+        {
+            urlTemplate += "&" + key + "=" + request.Query[key];
+        }
+    }
+
+    var startIndex = Math.Max(Model.PageIndex - 5, 1);
+    var finishIndex = Math.Min(Model.PageIndex + 5, Model.PageCount);
+}
+
+@if (Model.PageCount > 1)
+{
+    <ul class="pagination">
+        @if (Model.PageIndex != startIndex)
+        {
+            <li class="page-item">
+                @*<a class="page-link" title="1" href="@urlTemplate.Replace("{0}", "1")">Đầu</a>*@
+                <button type="button" title="1" onclick="window.location.href='@urlTemplate.Replace("{0}", "1")'" class="page-link">Đầu</button>
+            </li>
+            <li class="page-item">
+                @*<a class="page-link" href="@urlTemplate.Replace("{0}", (Model.PageIndex-1).ToString())">Trước</a>*@
+                <button type="button" onclick="window.location.href='@urlTemplate.Replace("{0}", (Model.PageIndex-1).ToString())'" class="page-link">Trước</button>
+            </li>
+        }
+        @for (var i = startIndex; i <= finishIndex; i++)
+        {
+            if (i == Model.PageIndex)
+            {
+                <li class="page-item active">
+                    @*<a class="page-link" href="#">@i <span class="sr-only">(current)</span></a>*@
+                    <button type="button" onclick="window.location.href='#'" class="page-link">@i <span class="sr-only">(current)</span></button>
+                </li>
+            }
+            else
+            {
+                @*<li class="page-item"><a class="page-link" title="Trang @i.ToString()" href="@urlTemplate.Replace("{0}", i.ToString())">@i</a></li>*@
+                <li class="page-item"><button type="button" title="Trang @i.ToString()" onclick="window.location.href='@urlTemplate.Replace("{0}", i.ToString())'" class="page-link">@i</button></li>
+            }
+        }
+        @if (Model.PageIndex != finishIndex)
+        {
+            <li class="page-item">
+                @*<a class="page-link" title="@Model.PageCount.ToString()" href="@urlTemplate.Replace("{0}", (Model.PageIndex+1).ToString())">Sau</a>*@
+                <button type="button" title="@Model.PageCount.ToString()" onclick="window.location.href='@urlTemplate.Replace("{0}", (Model.PageIndex+1).ToString())'" class="page-link">Sau</button>
+            </li>
+            <li class="page-item">
+                @*<a class="page-link" href="@urlTemplate.Replace("{0}", Model.PageCount.ToString())">Cuối</a>*@
+                <button type="button" onclick="window.location.href='@urlTemplate.Replace("{0}", Model.PageCount.ToString())'" class="page-link">Cuối</button>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\styleinputinformationpage.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReservationFlight.ApiIntegration\ReservationFlight.ApiIntegration.csproj" />
+    <ProjectReference Include="..\ReservationFlight.Model\ReservationFlight.Model.csproj" />
+    <ProjectReference Include="..\ReservationFlight.Utility\ReservationFlight.Utility.csproj" />
+  </ItemGroup>
+
+</Project>

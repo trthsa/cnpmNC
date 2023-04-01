@@ -1,0 +1,228 @@
+﻿@using ReservationFlight.Model.Catalog.Flights;
+@using ReservationFlight.Model.Common;
+@using Microsoft.AspNetCore.Http;
+@using ReservationFlight.Utility;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/assets/css/stylesearchpage.css" />
+    <link rel="stylesheet" href="~/assets//css/styleinputinformationpage.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container-fluid mt-2 mb-5">
+        @{
+            var detailOneWay = Context.Session.GetObject<FlightScheduleViewModel>("DetailOneWay");
+            var detailRoundTrip = Context.Session.GetObject<FlightScheduleViewModel>("DetailRoundTrip");
+            var classValueRow = (detailOneWay != null) ? "row" : string.Empty;
+            var classValueCol = (detailOneWay != null) ? "col-7" : string.Empty;
+        }
+
+        <div class="card border-0">
+            <div class="card-body">
+                <p>Dữ liệu cá nhân của Quý khách thu thập trên trang này được xử lý và lưu trữ bởi Huflit Airlines cho mục đích và theo điều kiện đã được công bố tại Chính sách bảo mật thông tin của Huflit Airlines.</p>
+                <p>Để tìm hiểu thêm về việc cách thức xử lý dữ liệu cá nhân của Quý khách và về các quyền của Quý khách (Quyền yêu cầu cung cấp thông tin, Quyền sửa đổi thông tin…), vui lòng đọc và chấp nhận <br /><a href="#">Chính sách bảo mật thông tin</a> của chúng tôi.</p>
+            </div>
+        </div>
+        <div class="@classValueRow mt-4">            
+            <div class="@classValueCol">
+                <h3 style="color: #005f6e;">Thông tin hành khách</h3>
+                <p class="mb-4">Quý Khách vui lòng sử dụng tiếng Việt không dấu và không sử dụng các ký tự đặc biệt. Vui lòng nhập đầy đủ tên hành khách và những thông tin khác xuất hiện trên (các) giấy tờ tùy thân do chính phủ cấp của hành khách.</p>
+                @{
+                    var quantityAdult = 0;
+                    var quantityChild = 0;
+
+                    var checkQuantityAdult = int.TryParse(Context.Session.GetString("QuantityAdult"), out quantityAdult);
+                    var checkQuantityChild = int.TryParse(Context.Session.GetString("QuantityChild"), out quantityChild);
+                }
+                @if (checkQuantityAdult && checkQuantityChild)
+                {
+                    for (int i = 1; i <= quantityAdult + quantityChild; i++)
+                    {                       
+                        <div class="card" style="
+                                padding: 30px 40px;
+                                margin-bottom: 20px;
+                                border: 1px solid #0254ec;">
+                            <h5 class="mb-4">Khách hàng @i </h5>
+                            <form class="form-card" id="form">
+                                <div class="row justify-content-between text-left">
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Tện Đệm và Tên<span class="text-danger"> *</span></label> <input type="text" id="firstName" name="firstName" onblur="validate(1)"> </div>
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Họ<span class="text-danger"> *</span></label> <input type="text" id="lastName" name="lastName" onblur="validate(2)"> </div>
+                                </div>
+                                <div class="row justify-content-between text-left">
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Ngày Tháng Năm sinh<span class="text-danger"> *</span></label> <input type="date" id="birthDate" name="birthDate" min="@(DateTime.Now.Year - 94)-01-01" max="@(DateTime.Now.Year - 12)-12-31" onblur="validate(1)"> </div>
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Giới tính<span class="text-danger"> *</span></label> <select id="sex" name="sex"><option value="Nam">Nam</option><option value="Nữ">Nữ</option></select> </div>
+                                </div>
+                                <div class="row justify-content-between text-left">
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">CCCD<span class="text-danger"> *</span></label> <input type="text" id="identityNumber" name="identityNumber" placeholder="" onblur="validate(3)"> </div>
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Số điện thoại<span class="text-danger"> *</span></label> <input type="text" id="phoneNumber" name="phoneNumber" placeholder="" onblur="validate(4)"> </div>
+                                </div>
+                                <div class="row justify-content-between text-left">
+                                    <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Địa chỉ Email<span class="text-danger"> *</span></label> <input type="text" id="email" name="email" placeholder="" onblur="validate(3)"> </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    <button type="button" id="submit" class="btn btn-lg btn-primary" style="float: right; width: 20%;">Tiếp tục</button>
+                }
+            </div>
+            @if (detailOneWay != null)
+            {
+                <div>
+                </div>
+                <div class="col-5 pt-4 mt-3">
+                    <div class="d-flex row">
+                        <div class="col-12">
+                            <div class="card card-body">
+                                <h4>Chi tiết chuyến bay</h4>
+                                <div class="card card-header mb-2">
+                                    <div class="row d-flex flex-row">
+                                        <div class="col-9 mr-auto">
+                                            @detailOneWay.DepartureId-@detailOneWay.ArrivalId
+                                        </div>
+                                        <div class="col-3">
+                                            @Html.Raw(FunctionCommon.FormatMoney(detailOneWay.Price-900000))
+                                        </div>
+                                    </div>
+                                </div>
+                                @{
+                                    if (detailRoundTrip != null)
+                                    {
+                                        <div class="card card-header mb-2">
+                                            <div class="row d-flex flex-row">
+                                                <div class="col-9 mr-auto">
+                                                    @detailRoundTrip.DepartureId-@detailRoundTrip.ArrivalId
+                                                </div>
+                                                <div class="col-3">
+                                                    @Html.Raw(FunctionCommon.FormatMoney(detailRoundTrip.Price-900000))
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                <div class="card card-header mb-2">
+                                    <div class="d-flex">Dịch vụ bổ trợ</div>
+                                </div>
+                                <div class="card card-header mb-2">
+                                    <div class="row d-flex flex-row">
+                                        <div class="col-9 mr-auto">
+                                            Thuế phí và các khoản thu
+                                        </div>
+                                        <div class="col-3">
+                                            @if (detailRoundTrip != null)
+                                            {
+                                                @Html.Raw(FunctionCommon.FormatMoney(Convert.ToDecimal(900000 * 2)))
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(FunctionCommon.FormatMoney(Convert.ToDecimal(900000)))
+                                            }
+                                        </div>
+                                    </div>
+                                    <img class="mb-2" href="#" />
+                                    <div class="card card-header">
+                                        <div class="row d-flex flex-row">
+                                            <div class="col-9 mr-auto">
+                                                test
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-header">
+                                    <div class="row d-flex flex-row">
+                                        <div class="col-9">
+                                            Tổng số tiền
+                                        </div>
+                                        <div class="col-3">
+                                            @Html.Raw(FunctionCommon.FormatMoney(detailOneWay.Price))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container">
+        <div class="spinner"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript">        
+        const btn = document.querySelector("#submit");
+        btn.addEventListener("click", () => {
+            const forms = document.querySelectorAll("form");
+            const output = [];
+            forms.forEach(form => {
+                output.push(Object.fromEntries(new FormData(form)));
+            });
+
+            //var data = {};
+            //data.id = 1;
+
+            //$.ajax({
+            //    type: 'POST',
+            //    url: '/Home/Test',
+            //    data: {
+            //        test : JSON.stringify(output)
+            //    },
+            //    dataType: 'json',
+            //    success: function (res) {
+            //        console.log(res)
+            //    },
+            //    error: function (err) {
+            //        console.log(err);
+            //    }
+            //});
+
+            $.ajax({
+                type: 'post',
+                url: '/Home/ReservationFlight',
+                data: {
+                    formDataCustomer: JSON.stringify(output)
+                },
+                success: function (res) {
+                    let timerInterval
+                    Swal.fire({
+                        title: 'Đặt vé thành công!',
+                        html: 'Trang sẽ tự động trở về trang chủ trong <b></b> giây.',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            const b = Swal.getHtmlContainer().querySelector('b')
+                            timerInterval = setInterval(() => {
+                                b.textContent = 2
+                            }, 100)
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            window.location.href = '/Home/Index';
+                        }
+                    })                
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+﻿span {
+    color: #4d4d4d;
+}
+
+h4, h2 {
+    color: #2596be;
+}
+
+i {
+    color: #ffcc00;
+}
+
+.container {
+    border-radius: 20px;
+}
+
+.bg-blue {
+    background: blue;
+}
+
+.dotted-line {
+    border: 1px dashed #fff;
+}
+
+
+.bg-top {
+    background: #f2f2f2;
+}
+
+.small-card {
+    background-color: #f0faf3;
+    border: 2px solid #2596be;
+    border-radius: 20px;
+}
+
+.card-body {
+    border: 2px solid #2596be;
+    border-radius: 20px;
+}
+
+/*.spinner {
+    border: 16px solid silver;
+    border-top: 16px solid #337AB7;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 700ms linear infinite;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+}*/
+
+/*@keyframes spin {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}*/

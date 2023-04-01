@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\wwwroot\**" />
+    <Content Remove="wwwroot\wwwroot\**" />
+    <EmbeddedResource Remove="wwwroot\wwwroot\**" />
+    <None Remove="wwwroot\wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Login\Index.cshtml" />
+    <None Include="Views\Shared\Components\Pager\Default.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\User\Create.cshtml" />
+    <None Include="Views\User\Delete.cshtml" />
+    <None Include="Views\User\Details.cshtml" />
+    <None Include="Views\User\Edit.cshtml" />
+    <None Include="Views\User\Index.cshtml" />
+    <None Include="Views\User\RoleAssign.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.14.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReservationFlight.ApiIntegration\ReservationFlight.ApiIntegration.csproj" />
+    <ProjectReference Include="..\ReservationFlight.Model\ReservationFlight.Model.csproj" />
+    <ProjectReference Include="..\ReservationFlight.Utility\ReservationFlight.Utility.csproj" />
+  </ItemGroup>
+
+</Project>

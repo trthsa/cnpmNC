@@ -1,0 +1,69 @@
+﻿@using ReservationFlight.Model.Systems.Utilities.Enums
+@using ReservationFlight.Utility
+@model ReservationFlight.Model.Catalog.Airports.AirportViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Chi tiết sân bay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Chi tiết sân bay @Model.Name</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Chi tiết sân bay</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="Airport">Về danh sách</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="font-weight-bold">
+                                @Html.DisplayNameFor(model => model.IATA)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.IATA)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                @Html.DisplayNameFor(model => model.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Name)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </td>
+                            <td>
+                                @{
+                                    var statusName = "";
+                                    switch (Model.Status)
+                                    {
+                                        case ((int)Status.Active):
+                                            statusName = "Đang hoạt động";
+                                            break;
+
+                                        case ((int)Status.InActive):
+                                            statusName = "Không hoạt động";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                @statusName
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

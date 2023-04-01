@@ -1,0 +1,109 @@
+﻿@using System.Collections
+@model ReservationFlight.Model.Catalog.Flights.FlightScheduleCreateRequest
+
+@{
+    ViewData["Title"] = "Tạo mới chuyến bay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .validation-summary-valid span {
+        display: none;
+    }
+</style>
+
+@section Scripts{
+    <script src="/js/site.js"></script>
+    <script>
+        var flightScheduleController = new FlightScheduleController();
+        flightScheduleController.initialize();
+    </script>
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Tạo mới chuyến bay</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Tạo mới chuyến bay</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="FlightSchedule">Về danh sách</a>
+        </div>
+        <div class="card-body">
+            <div class="col-md-8">
+                <form asp-action="Create" enctype="multipart/form-data" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="FlightRouteId" class="control-label"></label>
+                        <select asp-for="FlightRouteId" class="form-control form-control-md">
+                            @foreach (var item in ViewBag.FlightRouteList)
+                            {
+                                <option value="@item.Id">@string.Concat(@item.Departure, " - ", @item.Arrival)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="FlightRouteId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AviationId" class="control-label"></label>
+                        <select asp-for="AviationId" class="form-control form-control-md">
+                            @foreach (var item in ViewBag.AviationList)
+                            {
+                                <option value="@item.AviationCode">@item.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="AviationId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FlightNumber" class="control-label"></label>
+                        <input asp-for="FlightNumber" class="form-control" />
+                        <span asp-validation-for="FlightNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" type="number" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Date" class="control-label"></label>
+                        <input asp-for="Date" type="date" class="form-control" />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ScheduledTimeDeparture" class="control-label"></label>
+                        <input asp-for="ScheduledTimeDeparture" type="time" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ScheduledTimeArrival" class="control-label"></label>
+                        <input asp-for="ScheduledTimeArrival" type="time" class="form-control" />
+                        <span asp-validation-for="ScheduledTimeArrival" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SeatEconomy" class="control-label"></label>
+                        <input asp-for="SeatEconomy" type="number" class="form-control" />
+                        <span asp-validation-for="SeatEconomy" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SeatBusiness" class="control-label"></label>
+                        <input asp-for="SeatBusiness" type="number" class="form-control" />
+                        <span asp-validation-for="SeatBusiness" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select id="ddlStatus" asp-for="Status" class="form-control form-control-md">
+                            @*@foreach (DictionaryEntry item in ViewBag.StatusList)
+                            {
+                            <option value="@item.Value" selected>@item.Key</option>
+                            }*@
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

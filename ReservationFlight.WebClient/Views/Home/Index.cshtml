@@ -1,0 +1,147 @@
+﻿@model ReservationFlight.Model.Catalog.Flights.FlightScheduleCondition
+@{
+    Layout = "~/Views/Shared/_LayoutClient.cshtml";
+}
+<!--travel-box start-->
+<section class="travel-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="single-travel-boxes">
+                    <div id="desc-tabs" class="desc-tabs">
+                        <div id="flights">
+                            <div class="tab-para">
+                                <form autocomplete="off" asp-action="Search" enctype="multipart/form-data" method="post">
+                                    <div class="trip-circle">
+                                        <div class="single-trip-circle">
+                                            <input asp-for="JourneyType" class="ItineraryRadio" type="radio" id="radio01" onchange="ToggleDatepicker()" value="2">
+                                            <label for="radio01">
+                                                <span class="round-boarder">
+                                                    <span class="round-boarder1"></span>
+                                                </span>Round Trip
+                                            </label>
+                                        </div><!--/.single-trip-circle-->
+                                        <div class="single-trip-circle">
+                                            <input asp-for="JourneyType" class="ItineraryRadio" type="radio" id="radio02" checked onchange="ToggleDatepicker()" value="1">
+                                            <label for="radio02">
+                                                <span class="round-boarder">
+                                                    <span class="round-boarder1"></span>
+                                                </span>On Way
+                                            </label>
+                                        </div><!--/.single-trip-circle-->
+                                    </div><!--/.trip-circle-->
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="single-tab-select-box">
+                                                <h2>From</h2>
+                                                <div class="travel-select-icon">
+                                                    <select class="form-control" asp-for="DepartureId">
+                                                        @foreach (var item in ViewBag.AirportList)
+                                                        {
+                                                            <option value="@item.IATA">@item.Name</option>
+                                                        }
+                                                    </select><!-- /.select-->
+                                                </div><!-- /.travel-select-icon -->
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+
+                                        <div class="col-lg-2 col-md-3 col-sm-4">
+                                            <div class="single-tab-select-box">
+                                                <h2>Departure</h2>
+                                                <div class="travel-check-icon">
+                                                    <input asp-for="DateOneWay" type="text" class="form-control" data-toggle="datepicker" placeholder="@DateTime.Now.ToString("MM/dd/yyyy")">
+                                                </div><!-- /.travel-check-icon -->
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+
+                                        <div class="col-lg-2 col-md-3 col-sm-4" id="divtxtReturnDate" style="display: none;">
+                                            <div class="single-tab-select-box">
+                                                <h2>Return</h2>
+                                                <div class="travel-check-icon">
+                                                    <input asp-for="DateRoundTrip" type="text" class="form-control" data-toggle="datepicker" placeholder="@DateTime.Now.ToString("MM/dd/yyyy")">
+                                                </div><!-- /.travel-check-icon -->
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+
+                                        <div class="col-lg-2 col-md-1 col-sm-4">
+                                            <div class="single-tab-select-box">
+                                                <h2>Adults</h2>
+                                                <div class="travel-number-icon">
+                                                    <input asp-for="QuantityAdult" class="form-control" type="number" min="1" max="5" value="1">
+                                                </div>
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+
+                                        <div class="col-lg-2 col-md-1 col-sm-4">
+                                            <div class="single-tab-select-box">
+                                                <h2>Childs</h2>
+                                                <div class="travel-number-icon">
+                                                    <input asp-for="QuantityChild" class="form-control" type="number" min="0" max="5" value="0">
+                                                </div>
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+
+                                    </div><!--/.row-->
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="single-tab-select-box">
+                                                <h2>To</h2>
+                                                <div class="travel-select-icon">
+                                                    <select class="form-control" asp-for="ArrivalId">
+                                                        @foreach (var item in ViewBag.AirportList)
+                                                        {
+                                                            <option value="@item.IATA">@item.Name</option>
+                                                        }
+                                                    </select>
+                                                </div><!-- /.travel-select-icon -->
+
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+                                        <div class="col-lg-3 col-md-3 col-sm-4">
+                                            <div class="single-tab-select-box">
+
+                                                <h2>class</h2>
+                                                <div class="travel-select-icon">
+                                                    <select class="form-control ">
+
+                                                        <option value="default">enter class</option><!-- /.option-->
+
+                                                        <option value="A">A</option><!-- /.option-->
+
+                                                        <option value="B">B</option><!-- /.option-->
+                                                        <option value="C">C</option><!-- /.option-->
+
+                                                    </select><!-- /.select-->
+                                                </div><!-- /.travel-select-icon -->
+                                            </div><!--/.single-tab-select-box-->
+                                        </div><!--/.col-->
+                                        <div class="clo-sm-5">
+                                            <div class="about-btn pull-right">
+                                                <button type="submit" class="about-view travel-btn">
+                                                    Search
+                                                </button><!--/.travel-btn-->
+                                            </div><!--/.about-btn-->
+                                        </div><!--/.col-->
+
+                                    </div><!--/.row-->
+                                </form>
+                            </div>
+
+                        </div><!--/.tabpannel-->
+
+                    </div><!--/.tab content-->
+                </div><!--/.desc-tabs-->
+            </div><!--/.single-travel-box-->
+        </div><!--/.col-->
+    </div><!-- container -->
+</section><!--/.travel-box-->
+
+                                            <script>
+    $(document).ready(function () {
+        $('[data-toggle="datepicker"]').datepicker({
+            format: 'dd/MM/yyyy',
+            autoclose: true
+        });
+    });
+</script>

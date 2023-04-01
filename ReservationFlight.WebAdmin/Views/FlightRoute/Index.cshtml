@@ -1,0 +1,127 @@
+﻿@using ReservationFlight.Model.Common;
+@using ReservationFlight.Model.Systems.Utilities.Enums
+@using ReservationFlight.Utility
+@model PagedResult<ReservationFlight.Model.Catalog.Flights.FlightRouteViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Danh sách tuyến bay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script src="/js/site.js"></script>
+    <script>
+        var flightRouteController = new FlightRouteController();
+        flightRouteController.initialize();
+    </script>
+}
+    <div class="container-fluid">
+        <h1 class="mt-4">Danh sách tuyến bay</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Danh sách tuyến bay</li>
+        </ol>
+        <div class="card mb-12">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-7 col-xs-12">
+                        <button type="button" class="btn btn-success" onclick="window.location.href='/FlightRoute/Create'">Tạo mới</button>
+                    </div>
+                    <div class="col-md-5 col-xs-12">
+                        <form asp-action="Index" method="get">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    @*name: là tên tham số*@
+                                    <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    <button type="button" onclick="window.location.href='/FlightRoute/Index'" class="btn btn-secondary">Đặt lại</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().Id)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().Departure)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().Arrival)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().Status)
+                                </th>
+                                <th class="text-center">
+                                    Thao tác
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Id
+                                </td>
+                                <td>
+                                    @item.Departure
+                                </td>
+                                <td>
+                                    @item.Arrival
+                                </td>
+                                <td>
+                                    @{
+                                        var statusName = "";
+                                        switch (item.Status)
+                                        {
+                                            case ((int)Status.Active):
+                                                statusName = "Đang hoạt động";
+                                                break;
+
+                                            case ((int)Status.InActive):
+                                                statusName = "Không hoạt động";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    @statusName
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-flightroute" data-url="@Url.Action("Details", "FlightRoute", new { Id = item.Id })">Xem chi tiết</button>
+                                    <button class="btn btn-success btn-flightroute" data-url="@Url.Action("Edit", "FlightRoute", new { Id = item.Id })">Cập nhật</button>
+                                    @switch (item.Status)
+                                    {
+                                        case ((int)Status.Active):
+                                            <button class="btn btn-success btn-flightroute-status" data-id="@item.Id">Hủy kích hoạt</button>
+                                            break;
+
+                                        case ((int)Status.InActive):
+                                            <button class="btn btn-success btn-flightroute-status" data-id="@item.Id">Kích hoạt</button>
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    <button class="btn btn-danger btn-flightroute" data-url="@Url.Action("Delete", "FlightRoute", new { Id = item.Id })">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*truyền Model PagedResult vào vì hàm InvokeAsync của class PagerViewComponent nhận 1
+            tham số object PagedResult*@
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+    </div>
+</div>

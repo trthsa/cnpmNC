@@ -1,0 +1,94 @@
+﻿@using ReservationFlight.Model.Common;
+@using ReservationFlight.Utility
+@model PagedResult<ReservationFlight.Model.Catalog.Aviations.AviationViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Danh sách hãng hàng không";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script src="/js/site.js"></script>
+    <script>
+        var aviationController = new AviationController();
+        aviationController.initialize();
+    </script>
+}
+    <div class="container-fluid">
+        <h1 class="mt-4">Danh sách hàng hàng không</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Danh sách hãng hàng không</li>
+        </ol>
+        <div class="card mb-12">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-7 col-xs-12">
+                        <button type="button" class="btn btn-success" onclick="window.location.href='/Aviation/Create'">Tạo mới</button>
+                    </div>
+                    <div class="col-md-5 col-xs-12">
+                        <form asp-action="Index" method="get">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    @*name: là tên tham số*@
+                                    <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    <button type="button" onclick="window.location.href='/Aviation/Index'" class="btn btn-secondary">Đặt lại</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().AviationCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().ImageAviation)
+                            </th>
+                            <th class="text-center">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @item.AviationCode
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    <img style="width:100px;height:100px" src="@(Configuration["BaseAddress"] + item.ImageAviation)" alt="@item.Name" />
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-aviation" data-url="@Url.Action("Details", "Aviation", new { aviationCode = item.AviationCode })">Xem chi tiết</button>
+                                    <button class="btn btn-success btn-aviation" data-url="@Url.Action("Edit", "Aviation", new { aviationCode = item.AviationCode })">Cập nhật</button>
+                                    <button class="btn btn-success btn-aviation" data-url="@Url.Action("EditName", "Aviation", new { aviationCode = item.AviationCode })">Cập nhật tên</button>
+                                    <button class="btn btn-danger btn-aviation" data-url="@Url.Action("Delete", "Aviation", new { aviationCode = item.AviationCode })">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*truyền Model PagedResult vào vì hàm InvokeAsync của class PagerViewComponent nhận 1
+            tham số object PagedResult*@
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+﻿@using ReservationFlight.Model.Common;
+@using ReservationFlight.Utility
+@model PagedResult<ReservationFlight.Model.Catalog.Reservations.ReservationViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Lịch sử đặt vé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Lịch sử đặt vé</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Lịch sử đặt vé</li>
+    </ol>
+    <div class="card mb-12">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-7 col-xs-12">
+                </div>
+                <div class="col-md-5 col-xs-12">
+                    <form asp-action="Index" method="get">
+                        <div class="row">
+                            <div class="col-md-9">
+                                @*name: là tên tham số*@
+                                <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <button type="button" onclick="window.location.href='/Reservation/Index'" class="btn btn-secondary">Đặt lại</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().ReservationCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().IdFlightSchedule)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().IdentityNumber)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().TravelClass)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.First().Status)
+                            </th>
+                            <th class="text-center">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @item.ReservationCode
+                                </td>
+                                <td>
+                                    @item.IdFlightSchedule
+                                </td>
+                                <td>
+                                    @item.IdentityNumber
+                                </td>
+                                <td>
+                                    @Html.Raw(FunctionCommon.FormatMoney(item.Price))
+                                </td>
+                                <td>
+                                    @item.TravelClass
+                                </td>
+                                <td>
+                                    @item.Status
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-reservation" data-url="@Url.Action("Details", "Reservation", new { ReservationCode = item.ReservationCode })">Xem chi tiết</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*truyền Model PagedResult vào vì hàm InvokeAsync của class PagerViewComponent nhận 1
+            tham số object PagedResult*@
+            @await Component.InvokeAsync("Pager", Model)
+        </div>
+    </div>
+</div>
